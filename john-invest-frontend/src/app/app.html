@@ -10,7 +10,13 @@
     <label>Taxa de Juros (%):</label>
     <input type="number" [(ngModel)]="taxaJuros" name="taxaJuros" required>
 
-    <label>Tempo (meses):</label>
+    <label>Periodicidade:</label>
+    <mat-button-toggle-group class="text-gold" required name="peridiocidade" [(ngModel)]="periodicidade" aria-label="Período escolhido">
+      <mat-button-toggle value="mensal">Mensal</mat-button-toggle>
+      <mat-button-toggle value="anual">Anual</mat-button-toggle>
+
+    </mat-button-toggle-group>
+    <label>{{ periodicidade === 'mensal' ? 'Meses' : 'Anos' }}</label>
     <input type="number" [(ngModel)]="tempo" name="tempo" required>
 
     <button type="submit">Calcular</button>
