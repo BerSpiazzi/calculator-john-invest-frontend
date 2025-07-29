@@ -1,0 +1,38 @@
+<div class="container">
+  <h1 class="text-white">Calculadora de Juros Compostos</h1>
+  <form (ngSubmit)="calcular()">
+    <label>Valor Inicial:</label>
+    <input type="number" [(ngModel)]="valorInicial" name="valorInicial" required>
+
+    <label>Aporte Mensal:</label>
+    <input type="number" [(ngModel)]="aporteMensal" name="aporteMensal" required>
+
+    <label>Taxa de Juros (%):</label>
+    <input type="number" [(ngModel)]="taxaJuros" name="taxaJuros" required>
+
+    <label>Tempo (meses):</label>
+    <input type="number" [(ngModel)]="tempo" name="tempo" required>
+
+    <button type="submit">Calcular</button>
+  </form>
+
+  @if (resultados.length > 0) {
+    <div>
+      <h2 class="text-white">Resultado</h2>
+      <table>
+        <tr class="text-white">
+          <th>Período</th>
+          <th>Valor Final</th>
+          <th>Juros Mensal</th>
+        </tr>
+        @for (r of resultados; track r.periodo) {
+          <tr class="text-white">
+            <td>{{ r.periodo }}</td>
+            <td>R$ {{ r.valorFinal | number:'1.2-2' }}</td>
+            <td>R$ {{ r.valorJuros | number: '1.2-2' }}</td>
+          </tr>
+        }
+      </table>
+    </div>
+  }
+</div>
