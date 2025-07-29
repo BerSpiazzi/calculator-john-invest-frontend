@@ -41,7 +41,7 @@ export class App {
       tempo: tempoConvertido
     };
 
-    this.http.post<any[]>('http://localhost:8080/calcular', payload).subscribe(data => {
+    this.http.post<any[]>('https://john-invest-backend.onrender.com/calcular', payload).subscribe(data => {
       this.resultados = data;
     });
   }
