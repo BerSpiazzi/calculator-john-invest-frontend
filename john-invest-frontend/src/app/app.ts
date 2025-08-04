@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {DecimalPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {AppService} from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,10 @@ export class App {
   periodicidade = 'mensal';
   resultados: any[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private appService: AppService
+  ) {
   }
 
   calcular() {
@@ -41,7 +45,7 @@ export class App {
       tempo: tempoConvertido
     };
 
-    this.http.post<any[]>('https://john-invest-backend.onrender.com/calcular', payload).subscribe(data => {
+    this.appService.calculate(payload).subscribe(data => {
       this.resultados = data;
     });
   }
