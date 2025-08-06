@@ -11,7 +11,9 @@ import {CommonModule} from '@angular/common';
     imports: [ChartModule, CommonModule],
     template: `
         <div class="card mb-8!">
-            <div class="font-semibold text-xl mb-4">Gráfico Resultados</div>
+            <div class="flex justify-center">
+                <label class="font-semibold text-xl mb-4 text-primary">Gráfico Resultados</label>
+            </div>
             <p-chart type="line" [data]="chartData" [options]="chartOptions" class="h-100"/>
         </div>`
 })
