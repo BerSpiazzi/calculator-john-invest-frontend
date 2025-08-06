@@ -4,6 +4,7 @@ import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {CommonModule} from '@angular/common';
 import {Result, ResultService} from '../../service/result.service';
+import {Subscription} from "rxjs";
 
 @Component({
     standalone: true,
@@ -11,8 +12,10 @@ import {Result, ResultService} from '../../service/result.service';
     imports: [CommonModule, TableModule, ButtonModule, RippleModule],
     template: `
         <div class="card mb-8!">
-            <div class="font-semibold text-xl mb-4">Tabela Resultados</div>
-            <p-table [value]="results" [paginator]="true" [rows]="24" responsiveLayout="scroll">
+            <div class="flex justify-center">
+                <label class="font-semibold text-xl mb-4 text-primary">Tabela Resultados</label>
+            </div>
+            <p-table [value]="results" [paginator]="true" [size]="'small'" [rows]="12" responsiveLayout="scroll">
                 <ng-template #header>
                     <tr>
                         <th>Mês</th>
@@ -24,24 +27,32 @@ import {Result, ResultService} from '../../service/result.service';
                 </ng-template>
                 <ng-template #body let-result>
                     <tr>
-                        <td style="width: 15%; min-width: 5rem;"> {{ result.mes }}</td>
-                        <td style="width: 35%; min-width: 7rem;">{{ result.vlJuros | currency: 'R$' }}</td>
-                        <td style="width: 35%; min-width: 8rem;">{{ result.vlTotalInvestido | currency: 'R$' }}</td>
-                        <td style="width: 15%;">{{ result.vlTotalJuros | currency: 'R$' }}</td>
-                        <td style="width: 15%;">{{ result.vlTotalAcumulado | currency: 'R$' }}</td>
+                        <td style="width: 5%; min-width: 3rem;"> {{ result.mes }}</td>
+                        <td style="width: 15%; min-width: 7rem;">{{ result.vlJuros | currency: 'R$' }}</td>
+                        <td style="width: 15%; min-width: 7rem;">{{ result.vlTotalInvestido | currency: 'R$' }}</td>
+                        <td style="width: 15%; min-width: 7rem;">{{ result.vlTotalJuros | currency: 'R$' }}</td>
+                        <td style="width: 15%; min-width: 7rem;">{{ result.vlTotalAcumulado | currency: 'R$' }}</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>`,
-    providers: [ResultService]
 })
 export class ResultTableWidget {
     results!: Result[];
+    subscription!: Subscription;
 
     constructor(private readonly resultService: ResultService) {
     }
 
     ngOnInit() {
-        this.resultService.getResult().then((data) => (this.results = data));
+        this.subscription = this.resultService.results$.subscribe(data => {
+            console.log(data)
+            this.results = data;
+        });
+    }
+
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 }

@@ -1,55 +1,63 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
 import {MenuModule} from 'primeng/menu';
+import {ResultService, ResumoResultados} from "@/pages/service/result.service";
+import {Observable} from "rxjs";
+import {AsyncPipe, CurrencyPipe} from "@angular/common";
 
 @Component({
     standalone: true,
     selector: 'app-result-widget',
-    imports: [ButtonModule, MenuModule],
+    imports: [ButtonModule, MenuModule, CurrencyPipe, AsyncPipe],
     template: `
         <div class="card">
-            <div class="flex justify-center">
-                <h1 class="font-medium">Resultados</h1>
+
+            <div class="flex justify-center m-1">
+                <label class="font-semibold text-xl text-primary">Resultados Gerais</label>
             </div>
+
             <div class="flex justify-center">
-                <div class="grid grid-cols-1 md:grid-cols-3">
-                    <div class="m-4">
-                        <div class="card mb-0" style="background-color: #bfa57c">
-                            <div class="flex justify-center">
-                                <div class="flex flex-col items-center">
+                @let resumo = (resumo$ | async);
+                @if (resumo) {
+                    <div class="grid grid-rows-1 md:grid-rows-3">
+                        <div class="m-2">
+                            <div class="card mb-0 border border-primary-800">
+                                <div class="flex flex-col items-center p-4">
                                     <label class="block font-medium mb-2">Valor Total Final</label>
-                                    <label class="font-medium">R$ 12.000</label>
+                                    <label class="font-medium">{{ resumo.vlTotalFinal | currency: 'BRL':'symbol':'1.2-2' }}</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="m-4">
-                        <div class="card mb-0">
-                            <div class="flex justify-center">
-                                <div class="flex flex-col items-center">
+                        <div class="m-2">
+                            <div class="card mb-0 border border-primary-500">
+                                <div class="flex flex-col items-center p-4">
                                     <label class="block font-medium mb-2">Valor Total Investido</label>
-                                    <label class="font-medium">R$ 80.000</label>
+                                    <label class="font-medium">{{ resumo.vlTotalInvestido | currency: 'BRL':'symbol':'1.2-2' }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-2">
+                            <div class="card mb-0 border border-primary-200">
+                                <div class="flex flex-col items-center p-4">
+                                    <label class="block font-medium mb-2">Total em Juros</label>
+                                    <label class="font-medium">{{ resumo.vlTotalJuros | currency: 'BRL':'symbol':'1.2-2' }}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="m-4">
-                        <div class="card mb-0">
-                            <div class="flex justify-center ">
-                                <div class="flex flex-col items-center">
-                                    <label class="block font-medium mb-2">Total em juros</label>
-                                    <label class="font-medium">R$ 12.000</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
-        </div>`
+        </div>
+    `
 })
-export class ResultWidget {
-    items = [
-        {label: 'Add New', icon: 'pi pi-fw pi-plus'},
-        {label: 'Remove', icon: 'pi pi-fw pi-trash'}
-    ];
+export class ResultWidget implements OnInit {
+
+    resumo$!: Observable<ResumoResultados>;
+
+    constructor(private readonly resultService: ResultService) {
+    }
+
+    ngOnInit(): void {
+        this.resumo$ = this.resultService.resumo$;
+    }
 }
